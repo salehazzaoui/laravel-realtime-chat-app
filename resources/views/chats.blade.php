@@ -10,13 +10,18 @@
                     <li class="bg-neutral-700 p-1 w-full hover:opacity-90">
                         <div class="flex items-center justify-between p-2">
                             <span>{{ $chat->name }}</span>
-                            <a href="chats/{{$chat->id}}" class="bg-blue-500 text-white p-2 rounded-sm hover:opacity-90">
-                                @if ($chat->participants()->where('user_id', auth()->user()->id)->exists())
-                                   Go
-                                @else
-                                   Join
-                                @endif
-                            </a>
+                            @if ($chat->participants()->where('user_id', auth()->user()->id)->exists())
+                                <a href="chats/{{$chat->id}}" class="bg-blue-500 text-white p-2 rounded-sm hover:opacity-90">Go</a>
+                            @else
+                                <form action="{{ route('chat_join', [ 'chatId' => $chat->id ]) }}" method="post">
+                                    @csrf
+                                    @method('POST')
+                                    <div class="flex items-center space-x-1">
+                                        <x-input-field type="password" name="secret" placeholder="Secret" />
+                                        <button type="submit" class="bg-blue-500 text-white p-2 rounded-sm hover:opacity-90">Join</button>
+                                    </div>
+                                </form>
+                            @endif
                         </div>
                     </li>
                 @endforeach

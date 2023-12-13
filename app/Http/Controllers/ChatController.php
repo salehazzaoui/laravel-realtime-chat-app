@@ -42,6 +42,21 @@ class ChatController extends Controller
         return redirect()->to('/home')->with('status', 'chat created.');
     }
 
+    public function joinChat(Request $request, $chatId)
+    {
+        $request->validate([
+            'secret' => ['required', 'string']
+        ]);
+        $chat = Chat::with(['messages', 'participants'])->findOrFail($chatId);
+        if(!Hash::check($request->secret, $chat->secret)){
+            return back()->with('error', 'Wrong secret!');
+        }
+
+        $chat->participants()->attach(auth()->user());
+
+        return redirect()->to('/chats/'.$chatId);
+    }
+
     public function show($id)
     {
         $chat = Chat::with(['messages', 'participants'])->findOrFail($id);

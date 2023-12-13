@@ -37,5 +37,6 @@ Route::middleware('auth')->group(function (){
     Route::get('/home', [ChatController::class, 'index'])->name('home');
     Route::post('/chats', [ChatController::class, 'createChat'])->name('chats');
     Route::get('/chats/{id}', [ChatController::class, 'show'])->name('chats_show');
+    Route::post('/chats/{chatId}', [ChatController::class, 'joinChat'])->name('chat_join');
     Route::post('/chats/{chatId}/message', [ChatController::class, 'sendMessage'])->name('send_message');
 });
